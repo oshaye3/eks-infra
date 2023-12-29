@@ -1,29 +1,45 @@
-name: Terraform Security Scan
+name: Terraform and YAML CI
 
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
-  schedule:
-    - cron: '0 14 * * 0' # Scheduled to run every Sunday at 14:00 UTC
+      - main
+  # schedule:
+    # - cron: '0 14 * * 0'  # Scheduled to run every Sunday at 14:00 UTC
 
 jobs:
-  tfsec:
-    name: TFSec Scan
+  terraform-security-scan:
+    name: Terraform Security Scan
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout the code
       uses: actions/checkout@v2
 
     - name: Install tfsec
       run: |
-        curl -sL "$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep -o -E "https://.+?tfsec-linux-amd64")" > tfsec
+        TFSEC_LATEST=$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep browser_download_url | grep 'tfsec-linux-amd64' | cut -d '"' -f 4)
+        wget -O tfsec $TFSEC_LATEST
         chmod +x tfsec
         sudo mv tfsec /usr/local/bin/
 
     - name: Run tfsec
       run: tfsec .
 
+  yaml-lint:
+    name: YAML Lint
+    runs-on: ubuntu-latest
+    needs: terraform-security-scan
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Install yamllint
+      run: sudo apt-get install yamllint
+
+    - name: Run yamllint
+      run: yamllint .
