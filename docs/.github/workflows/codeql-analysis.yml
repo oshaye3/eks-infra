@@ -1,0 +1,41 @@
+name: Terraform and YAML CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  terraform-security-scan:
+    name: Terraform Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Install tfsec
+      run: |
+        TFSEC_LATEST=$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep browser_download_url | grep 'tfsec-linux-amd64' | cut -d '"' -f 4)
+        wget -O tfsec $TFSEC_LATEST
+        chmod +x tfsec
+        sudo mv tfsec /usr/local/bin/
+
+    - name: Run tfsec
+      continue-on-error: true  # This allows the workflow to continue even if tfsec finds issues
+      run: tfsec .
+
+  yaml-lint:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - name: Install yamllint
+        run: sudo apt-get install yamllint
+      - name: Run yamllint
+        continue-on-error: true
+        run: yamllint .
