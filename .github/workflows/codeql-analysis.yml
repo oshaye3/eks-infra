@@ -16,19 +16,14 @@ jobs:
       contents: read
       security-events: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ['built-in-languages']
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-      with:
-        languages: ${{ matrix.language }}
+      uses: github/codeql-action/init@v2
+      # No 'with' section needed for autodetection
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2
+      # No 'with' section needed as languages are autodetected
