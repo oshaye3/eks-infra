@@ -1,29 +1,29 @@
-name: "CodeQL"
+name: Terraform Security Scan
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
-
+    branches:
+      - master
+  schedule:
+    - cron: '0 14 * * 0' # Scheduled to run every Sunday at 14:00 UTC
 
 jobs:
-  analyze:
-    name: Analyze
+  tfsec:
+    name: TFSec Scan
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
     steps:
-    - name: Checkout repository
+    - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      # No 'with' section needed for autodetection
+    - name: Install tfsec
+      run: |
+        curl -sL "$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep -o -E "https://.+?tfsec-linux-amd64")" > tfsec
+        chmod +x tfsec
+        sudo mv tfsec /usr/local/bin/
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-      # No 'with' section needed as languages are autodetected
+    - name: Run tfsec
+      run: tfsec .
+
