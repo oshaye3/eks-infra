@@ -35,7 +35,7 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | Region to deploy resources | `string` | `"us-east-1"` | no |
-| <a name="input_github_username"></a> [github\_username](#input\_github\_username) | Github username | `string` | `"yemisprojects"` | no |
+| <a name="input_github_username"></a> [github\_username](#input\_github\_username) | Github username | `string` | `"oshaye3"` | no |
 | <a name="input_repo_name"></a> [repo\_name](#input\_repo\_name) | github repo name | `string` | `"eks-infra"` | no |
 
 ## Outputs

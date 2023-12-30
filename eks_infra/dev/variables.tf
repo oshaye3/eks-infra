@@ -93,7 +93,7 @@ variable "cluster_endpoint_public_access_cidrs" {
 variable "grafana_domain_name" {
   description = "Domain name to access grafana"
   type        = string
-  default     = "monitoring.devopsmichael.com"
+  default     = "monitoring.maogram.com"
 
 }
 

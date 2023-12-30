@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "github_username" {
   description = "Github username"
   type        = string
-  default     = "yemisprojects"
+  default     = "oshaye3"
 }
 
 variable "repo_name" {
